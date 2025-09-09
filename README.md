@@ -37,6 +37,8 @@ This website aims to:
 3. Provide factual information about datacenter development impacts
 4. Use humor and satire to make serious topics more accessible
 
+Festival dates mirror the 2026 Shenandoah Apple Blossom Festival (April 24 - May 3, 2026) for maximum satirical impact.
+
 ## Disclaimer
 
 This is a work of satire intended to promote discussion about land use and agricultural preservation. It is not affiliated with any actual datacenter companies or agricultural organizations.
