@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussions - Shenandoah Datacenter Festival</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="discussions.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://unpkg.com/nostr-tools@latest/lib/nostr.bundle.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="shenandoah-data-center-festival-logo.jpeg" alt="SDCF Logo" class="logo-img">
+                    <a href="index.html" class="logo-text">SDCF 2026</a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#events" class="nav-link">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#tickets" class="nav-link">Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#discussions" class="nav-link active">Discussions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="facts.html" class="nav-link">Datacenter Facts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="discussions-hero">
+            <div class="container">
+                <h1>Community Discussions</h1>
+                <p class="discussions-subtitle">Join the conversation about Frederick County's agricultural future</p>
+            </div>
+        </section>
+
+        <div class="discussions-container">
+            <div class="container">
+                <!-- Auth Status and Sign-up -->
+                <div id="auth-section" class="auth-section">
+                    <div id="not-authenticated" class="auth-card">
+                        <h3>🌾 Join the Digital Harvest Discussion</h3>
+                        <p>Connect your Nostr identity to participate in community discussions about Frederick County's future.</p>
+                        <div class="auth-options">
+                            <button id="connect-nostr" class="btn btn-primary">Connect Nostr Wallet</button>
+                            <button id="request-access" class="btn btn-secondary">Request Access</button>
+                        </div>
+                        <p class="auth-note">New to Nostr? <a href="#nostr-help" class="help-link">Learn more about Nostr</a></p>
+                    </div>
+
+                    <div id="authenticated" class="auth-card" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <h4 id="user-name">Connected</h4>
+                                <p id="user-nip05">@shenandoahdatacenterfestival.com</p>
+                            </div>
+                            <button id="disconnect" class="btn btn-outline">Disconnect</button>
+                        </div>
+                    </div>
+
+                    <div id="request-access-form" class="auth-card" style="display: none;">
+                        <h3>Request Whitelist Access</h3>
+                        <form id="access-request-form">
+                            <div class="form-group">
+                                <label for="request-npub">Your Nostr Public Key (npub)</label>
+                                <input type="text" id="request-npub" placeholder="npub1..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="request-name">Display Name</label>
+                                <input type="text" id="request-name" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="request-reason">Why do you want to join?</label>
+                                <textarea id="request-reason" placeholder="Tell us about your interest in Frederick County's agricultural future..." required></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Send Access Request</button>
+                                <button type="button" id="cancel-request" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Post Creation -->
+                <div id="post-creation" class="post-creation" style="display: none;">
+                    <div class="create-post-card">
+                        <div class="post-header">
+                            <div class="user-avatar">👤</div>
+                            <textarea id="post-content" placeholder="What's on your mind about Frederick County's future?" maxlength="280"></textarea>
+                        </div>
+                        <div class="post-actions">
+                            <span class="char-count">280</span>
+                            <button id="submit-post" class="btn btn-primary" disabled>Share Thoughts</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discussion Feed -->
+                <div class="discussion-feed">
+                    <div class="feed-header">
+                        <h2>Recent Discussions</h2>
+                        <div class="feed-controls">
+                            <button id="refresh-feed" class="btn btn-outline">🔄 Refresh</button>
+                            <select id="sort-posts" class="sort-select">
+                                <option value="recent">Most Recent</option>
+                                <option value="popular">Most Popular</option>
+                                <option value="discussed">Most Discussed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="posts-container" class="posts-container">
+                        <!-- Loading state -->
+                        <div id="loading-posts" class="loading-state">
+                            <div class="loading-spinner">⚡</div>
+                            <p>Loading discussions from the digital harvest...</p>
+                        </div>
+
+                        <!-- No posts state -->
+                        <div id="no-posts" class="empty-state" style="display: none;">
+                            <div class="empty-icon">🌾</div>
+                            <h3>No discussions yet</h3>
+                            <p>Be the first to start a conversation about Frederick County's agricultural future!</p>
+                        </div>
+
+                        <!-- Posts will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Nostr Help Modal -->
+                <div id="nostr-help-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>What is Nostr?</h3>
+                            <button id="close-help" class="close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Nostr</strong> is a decentralized protocol for social communication. Think of it as Twitter, but no single company controls it.</p>
+                            
+                            <h4>Getting Started:</h4>
+                            <ol>
+                                <li><strong>Get a Nostr Client:</strong> Try <a href="https://damus.io" target="_blank">Damus</a> (iOS), <a href="https://primal.net" target="_blank">Primal</a> (Web), or <a href="https://nostrudel.ninja" target="_blank">Nostrudel</a></li>
+                                <li><strong>Create Your Identity:</strong> Your client will generate a public/private key pair</li>
+                                <li><strong>Get Your npub:</strong> This is your public identifier (starts with "npub1...")</li>
+                                <li><strong>Request Access:</strong> Send us your npub to join the discussion</li>
+                            </ol>
+
+                            <h4>Why Nostr for Agricultural Discussions?</h4>
+                            <ul>
+                                <li>🌾 <strong>Decentralized:</strong> No corporate control over rural voices</li>
+                                <li>🚜 <strong>Censorship Resistant:</strong> Important for agricultural advocacy</li>
+                                <li>⚡ <strong>Direct Communication:</strong> Connect directly with other farmers and advocates</li>
+                                <li>🔐 <strong>Verified Identity:</strong> NIP-05 verification ensures authentic community members</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Shenandoah Datacenter Festival</h4>
+                    <p>Powered by Nostr - Decentralized discussions for agricultural preservation.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Nostr Resources</h4>
+                    <ul>
+                        <li><a href="https://nostr.com" target="_blank">What is Nostr?</a></li>
+                        <li><a href="https://damus.io" target="_blank">Damus Client</a></li>
+                        <li><a href="https://primal.net" target="_blank">Primal Client</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community Guidelines</h4>
+                    <ul>
+                        <li>Respectful agricultural discourse</li>
+                        <li>Evidence-based discussions</li>
+                        <li>Support local farming communities</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 This website is a work of satire intended to promote discussion about land use and agricultural preservation. Powered by Nostr protocol.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="nostr-client.js"></script>
+    <script src="discussions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

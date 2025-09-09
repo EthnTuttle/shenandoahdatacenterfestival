@@ -1,0 +1,18 @@
+name: "Satirical Festival Website with Nostr Discussions"
+description: "A template for creating satirical festival websites with integrated Nostr-based discussion system and NIP-05 identity verification"
+visibility: public
+repository:
+  name_template: "$REPOSITORY_NAME"
+  description_template: "A satirical festival website promoting agricultural preservation with Nostr-powered discussions"
+  homepage_url: "https://$REPOSITORY_NAME.com"
+  topics:
+    - "satirical-website"
+    - "festival"
+    - "nostr"
+    - "agricultural-preservation"
+    - "github-pages"
+    - "nip-05"
+include:
+  - "**/*"
+exclude:
+  - ".github/workflows/deploy.yml"

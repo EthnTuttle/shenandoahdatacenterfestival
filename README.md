@@ -1,33 +1,80 @@
 # Shenandoah Datacenter Festival
 
-A satirical website highlighting the tension between Frederick County's agricultural heritage and datacenter development.
+A satirical website template with integrated Nostr discussions, highlighting the tension between agricultural heritage and datacenter development.
 
 ## About
 
-This website presents the fictional "Shenandoah Datacenter Festival" as a creative way to draw attention to the real-world impact of datacenter development on rural communities and agricultural land in Frederick County, Virginia.
+This template creates satirical festival websites as a creative way to draw attention to land use issues. The Shenandoah Datacenter Festival example addresses datacenter development impacts on rural communities in Frederick County, Virginia.
 
-The site combines satirical festival marketing with serious information about datacenter development impacts, serving both as entertainment and education.
+The site combines satirical festival marketing with serious information about development impacts and decentralized community discussions powered by Nostr.
 
 ## Features
 
-- **Satirical Festival Events**: Fictional events like "Little Miss Gigawatt" and "Pick Your Own Server VR Experience"
-- **Serious Facts Page**: Real information about datacenter impacts on agriculture and rural communities
+### Core Template Features
+- **Satirical Festival Marketing**: Complete with fictional events and professional design
+- **Serious Information Pages**: Real data about land use impacts
 - **Responsive Design**: Works on desktop and mobile devices
 - **Interactive Elements**: Smooth scrolling, animations, and Easter eggs
 
-## Structure
+### Nostr Integration
+- **Decentralized Discussions**: Community conversations powered by Nostr protocol
+- **NIP-05 Identity Verification**: Whitelisted users verified through domain
+- **Admin Whitelist System**: DM-based access request system
+- **Facebook-style Interface**: Familiar social media UX with decentralized backend
+- **Real-time Feed**: Live updates from Nostr relays
+- **Comment Threading**: Full discussion capabilities
+
+## Using This Template
+
+### Quick Start
+1. Click "Use this template" on GitHub
+2. Update `config.js` with your admin npub and site details
+3. Modify `.well-known/nostr.json` with your initial whitelist
+4. Customize the festival content for your cause
+5. Deploy to GitHub Pages
+
+### Configuration
+
+#### Admin Setup
+```javascript
+// config.js - Update with your details
+ADMIN_NPUB: 'your-admin-npub-here', // Receives whitelist requests
+SITE_INFO: {
+    domain: 'yoursite.com',
+    name: 'Your Festival Name',
+    description: 'Your cause description'
+}
+```
+
+#### NIP-05 Whitelist
+```json
+// .well-known/nostr.json - Add approved users
+{
+    "names": {
+        "username1": "user1-hex-pubkey",
+        "username2": "user2-hex-pubkey"
+    }
+}
+```
+
+## File Structure
 
 - `index.html` - Main festival marketing page (satirical)
-- `facts.html` - Serious information about datacenter development impacts
-- `styles.css` - Main stylesheet
-- `facts.css` - Additional styles for the facts page
-- `script.js` - Interactive JavaScript features
-- `favicon.ico` - Site icon
-- `shenandoah-data-center-festival-logo.jpeg` - Festival logo
+- `discussions.html` - Nostr-powered community discussions
+- `facts.html` - Serious information page
+- `config.js` - Nostr and site configuration
+- `nostr-client.js` - Nostr protocol integration
+- `discussions.js` - Discussion interface logic
+- `styles.css` & `discussions.css` - Styling
+- `.well-known/nostr.json` - NIP-05 identity verification
 
 ## Deployment
 
-This site is configured for GitHub Pages with a custom domain (shenandoahdatacenterfestival.com).
+### GitHub Pages Setup
+1. Enable GitHub Pages in repository settings
+2. Choose "GitHub Actions" as source (automatic with included workflow)
+3. Set custom domain in Pages settings
+4. Configure DNS A records for your domain
 
 ## Purpose
 
