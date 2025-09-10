@@ -139,7 +139,7 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
-    animation: decayToDatacenter 8s ease-in-out infinite;
+    animation: decayToDatacenter 8s ease-in-out forwards;
 }
 
 @keyframes decayToDatacenter {
@@ -180,7 +180,7 @@ body {
     justify-content: space-around;
     align-items: center;
     opacity: 0.6;
-    animation: floralDecay 8s ease-in-out infinite;
+    animation: floralDecay 8s ease-in-out forwards;
 }
 
 @keyframes floralDecay {
