@@ -294,6 +294,369 @@
     }
 }
 
+/* Callout Sections */
+.noise-impacts, .construction-timeline, .traffic-crisis, .water-crisis, .future-vision, .tax-burden-analysis {
+    margin-top: 30px;
+}
+
+.noise-callout, .traffic-callout, .water-callout, .vision-callout, .tax-callout {
+    background: #fff5f5;
+    border-left: 5px solid #e74c3c;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+}
+
+.noise-callout.critical, .traffic-callout.critical, .water-callout.critical, .vision-callout.critical, .tax-callout.critical {
+    background: #ffebee;
+    border-left-color: #c62828;
+    border-left-width: 8px;
+}
+
+.construction-impact-callout, .emergency-callout, .cost-reality, .planning-failure {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border: 2px solid #ff9800;
+    padding: 30px;
+    margin: 30px 0;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.2);
+}
+
+.emergency-callout h3, .cost-reality h3 {
+    color: #e65100;
+    margin-bottom: 15px;
+}
+
+/* Timeline Styling */
+.timeline-phase {
+    background: #f8f9fa;
+    border-left: 4px solid #6c757d;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.timeline-phase h4 {
+    color: #495057;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.timeline-phase ul {
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+.timeline-phase li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* Traffic Crisis Styling */
+.traffic-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.traffic-impact {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #dc3545;
+}
+
+.traffic-impact h4 {
+    color: #721c24;
+    margin-bottom: 15px;
+}
+
+/* Water Crisis Styling */
+.water-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.water-stat {
+    background: #e3f2fd;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #1976d2;
+}
+
+.water-stat h4 {
+    color: #0d47a1;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.infrastructure-costs {
+    margin-top: 40px;
+    background: #fff8e1;
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid #ffc107;
+}
+
+.cost-breakdown {
+    display: grid;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.cost-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #ff9800;
+}
+
+.cost-burden {
+    background: #ffebee;
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 4px solid #f44336;
+}
+
+/* Future Vision Styling */
+.future-scenarios {
+    display: grid;
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.scenario {
+    background: #fafafa;
+    border: 2px solid #757575;
+    border-radius: 10px;
+    padding: 25px;
+    transition: all 0.3s;
+}
+
+.scenario:hover {
+    background: #f5f5f5;
+    border-color: #424242;
+    box-shadow: 0 6px 20px rgba(66, 66, 66, 0.15);
+}
+
+.scenario h4 {
+    color: #424242;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.failure-points {
+    display: grid;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.failure-point {
+    background: #ffebee;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #e53935;
+}
+
+.failure-point h4 {
+    color: #c62828;
+    margin-bottom: 10px;
+}
+
+/* Cost Projection Styling */
+.cost-timeline {
+    display: grid;
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.cost-phase {
+    background: #f3e5f5;
+    border: 2px solid #9c27b0;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.cost-phase h4 {
+    color: #6a1b9a;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+/* Tax Burden Analysis */
+.lci-impact {
+    margin: 30px 0;
+}
+
+.lci-explanation {
+    background: #e8eaf6;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #3f51b5;
+    margin-bottom: 25px;
+}
+
+.lci-impacts {
+    background: white;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 2px solid #5c6bc0;
+}
+
+.lci-impacts li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.lci-impacts li::before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.funding-math {
+    background: #fff3e0;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #ff9800;
+}
+
+.domino-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.domino-effect {
+    background: white;
+    border: 2px solid #e91e63;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.domino-effect:hover {
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.2);
+    transform: translateY(-3px);
+}
+
+.domino-effect h4 {
+    color: #ad1457;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.real-numbers {
+    margin: 40px 0;
+    background: #f1f8e9;
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid #4caf50;
+}
+
+.real-numbers h3 {
+    color: #2e7d32;
+    margin-bottom: 25px;
+}
+
+.tax-scenario {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 5px solid #66bb6a;
+}
+
+.tax-scenario h4 {
+    color: #388e3c;
+    margin-bottom: 10px;
+}
+
+.solution-alternative {
+    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+    padding: 30px;
+    border-radius: 12px;
+    border: 3px solid #4caf50;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.solution-alternative h3 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.solution-alternative a {
+    color: #1b5e20;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #4caf50;
+    transition: all 0.3s;
+}
+
+.solution-alternative a:hover {
+    color: #4caf50;
+    border-bottom-color: #2e7d32;
+}
+
+/* Critical Alert Styling */
+.critical {
+    animation: pulse-warning 3s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% { 
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15); 
+    }
+    50% { 
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3); 
+    }
+}
+
+/* Responsive Design for New Sections */
+@media (max-width: 768px) {
+    .traffic-details,
+    .water-stats,
+    .domino-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .noise-callout,
+    .traffic-callout,
+    .water-callout,
+    .vision-callout,
+    .tax-callout {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-phase,
+    .scenario,
+    .cost-phase,
+    .domino-effect {
+        padding: 20px;
+    }
+    
+    .infrastructure-costs,
+    .real-numbers,
+    .solution-alternative {
+        padding: 25px;
+        margin: 25px 0;
+    }
+}
+
 /* Print Styles */
 @media print {
     .navbar, .footer, .facts-hero {
@@ -311,7 +674,12 @@
         margin-bottom: 20px;
     }
     
-    .stats-grid, .content-grid, .solutions-grid {
+    .stats-grid, .content-grid, .solutions-grid,
+    .traffic-details, .water-stats, .domino-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .critical {
+        animation: none;
     }
 }
