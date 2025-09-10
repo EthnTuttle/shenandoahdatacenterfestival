@@ -1,132 +1,204 @@
-/* Facts Page Specific Styles */
+/* Facts Page - Clean Festival Design Inspired by thebloom.com */
 
 .nav-link.active {
-    color: #4facfe;
+    color: #f05d79;
     font-weight: 600;
 }
 
 .facts-hero {
-    background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+    background: linear-gradient(135deg, #f05d79 0%, #ff8fa3 100%);
     color: white;
     padding: 120px 0 80px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.facts-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.1);
+    z-index: 1;
+}
+
+.facts-hero .container {
+    position: relative;
+    z-index: 2;
 }
 
 .facts-hero h1 {
-    font-size: 3em;
+    font-size: 3.5em;
     margin-bottom: 20px;
-    font-weight: bold;
+    font-weight: 300;
+    letter-spacing: -1px;
 }
 
 .facts-subtitle {
-    font-size: 1.3em;
-    opacity: 0.9;
-    max-width: 600px;
+    font-size: 1.4em;
+    opacity: 0.95;
+    max-width: 700px;
     margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.4;
 }
 
 .facts-content {
-    padding: 80px 0;
+    padding: 100px 0;
+    background: #fafafa;
 }
 
 .content-intro {
-    margin-bottom: 80px;
+    margin-bottom: 100px;
+    background: white;
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .lead {
-    font-size: 1.3em;
-    line-height: 1.7;
+    font-size: 1.4em;
+    line-height: 1.6;
     color: #555;
     text-align: center;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
+    font-weight: 300;
 }
 
 .fact-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
+    display: grid;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .fact-section {
     background: white;
-    border-radius: 15px;
-    padding: 60px 40px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border-left: 5px solid #4facfe;
+    border-radius: 20px;
+    padding: 80px 60px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 6px solid #f05d79;
+}
+
+.fact-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
 }
 
 .fact-section.call-to-action {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e8f4fd 100%);
-    border-left-color: #2c5530;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffebf0 100%);
+    border-top-color: #2c5530;
 }
 
 .fact-section h2 {
-    font-size: 2.2em;
-    margin-bottom: 40px;
-    color: #2c5530;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    font-size: 2.5em;
+    margin-bottom: 50px;
+    color: #333;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: -0.5px;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
 }
 
 .stat-item {
     text-align: center;
-    padding: 30px 20px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 2px solid #e9ecef;
-    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 50px 30px;
+    background: #fff;
+    border-radius: 15px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f05d79, #ff8fa3);
+    border-radius: 15px 15px 0 0;
 }
 
 .stat-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(240, 93, 121, 0.15);
+    border-color: #f05d79;
 }
 
 .stat-number {
-    font-size: 3em;
-    font-weight: bold;
-    color: #4facfe;
-    margin-bottom: 15px;
+    font-size: 3.5em;
+    font-weight: 100;
+    color: #f05d79;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
 }
 
 .stat-label {
-    font-size: 1em;
+    font-size: 1.1em;
     color: #666;
     line-height: 1.5;
+    font-weight: 300;
 }
 
 .content-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
 }
 
 .content-block {
-    padding: 30px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border-left: 4px solid #4facfe;
+    padding: 45px 35px;
+    background: #fff;
+    border-radius: 15px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.content-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f05d79, #ff8fa3);
+    border-radius: 15px 15px 0 0;
+}
+
+.content-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(240, 93, 121, 0.12);
 }
 
 .content-block h3 {
-    font-size: 1.4em;
-    margin-bottom: 20px;
-    color: #2c5530;
+    font-size: 1.5em;
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 400;
 }
 
 .content-block p {
     line-height: 1.7;
-    color: #555;
+    color: #666;
+    font-weight: 300;
 }
 
 .environmental-facts {
@@ -294,86 +366,154 @@
     }
 }
 
-/* Callout Sections */
+/* Clean Festival-Style Callout Sections */
 .noise-impacts, .construction-timeline, .traffic-crisis, .water-crisis, .future-vision, .tax-burden-analysis {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .noise-callout, .traffic-callout, .water-callout, .vision-callout, .tax-callout {
-    background: #fff5f5;
-    border-left: 5px solid #e74c3c;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-left: 5px solid #f05d79;
+    padding: 40px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.noise-callout:hover, .traffic-callout:hover, .water-callout:hover, .vision-callout:hover, .tax-callout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(240, 93, 121, 0.15);
 }
 
 .noise-callout.critical, .traffic-callout.critical, .water-callout.critical, .vision-callout.critical, .tax-callout.critical {
-    background: #ffebee;
-    border-left-color: #c62828;
-    border-left-width: 8px;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffebf0 100%);
+    border-left-color: #e74c3c;
+    border-left-width: 6px;
 }
 
 .construction-impact-callout, .emergency-callout, .cost-reality, .planning-failure {
-    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-    border: 2px solid #ff9800;
-    padding: 30px;
-    margin: 30px 0;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.2);
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-top: 6px solid #ff9800;
+    padding: 50px 40px;
+    margin: 50px 0;
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(255, 152, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.construction-impact-callout:hover, .emergency-callout:hover, .cost-reality:hover, .planning-failure:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(255, 152, 0, 0.15);
 }
 
 .emergency-callout h3, .cost-reality h3 {
-    color: #e65100;
-    margin-bottom: 15px;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 300;
+    text-align: center;
 }
 
-/* Timeline Styling */
+/* Clean Timeline Styling */
+.construction-timeline {
+    display: grid;
+    gap: 40px;
+    margin-top: 50px;
+}
+
 .timeline-phase {
-    background: #f8f9fa;
-    border-left: 4px solid #6c757d;
-    padding: 25px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    padding: 40px;
     position: relative;
+    transition: all 0.3s ease;
+    border-top: 5px solid #6c757d;
+}
+
+.timeline-phase:nth-child(1) { border-top-color: #f05d79; }
+.timeline-phase:nth-child(2) { border-top-color: #ff9800; }
+.timeline-phase:nth-child(3) { border-top-color: #4caf50; }
+
+.timeline-phase:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .timeline-phase h4 {
-    color: #495057;
-    font-size: 1.3em;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 10px;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 25px;
+    font-weight: 400;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
 }
 
 .timeline-phase ul {
-    margin-left: 20px;
-    margin-top: 15px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .timeline-phase li {
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-/* Traffic Crisis Styling */
-.traffic-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin: 25px 0;
-}
-
-.traffic-impact {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    border-left: 4px solid #dc3545;
-}
-
-.traffic-impact h4 {
-    color: #721c24;
     margin-bottom: 15px;
+    line-height: 1.6;
+    padding-left: 25px;
+    position: relative;
+    color: #666;
+    font-weight: 300;
+}
+
+.timeline-phase li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #f05d79;
+    font-weight: 600;
+}
+
+/* Clean Traffic & Water Crisis Styling */
+.traffic-details, .water-stats, .domino-grid, .future-scenarios {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.traffic-impact, .water-stat, .domino-effect, .scenario {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.traffic-impact::before, .water-stat::before, .domino-effect::before, .scenario::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f05d79, #ff8fa3);
+    border-radius: 15px 15px 0 0;
+}
+
+.traffic-impact:hover, .water-stat:hover, .domino-effect:hover, .scenario:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(240, 93, 121, 0.12);
+}
+
+.traffic-impact h4, .water-stat h4, .domino-effect h4, .scenario h4 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    font-weight: 400;
 }
 
 /* Water Crisis Styling */
@@ -611,18 +751,72 @@
     border-bottom-color: #2e7d32;
 }
 
-/* Critical Alert Styling */
-.critical {
-    animation: pulse-warning 3s ease-in-out infinite;
+/* Special Highlights */
+.infrastructure-costs, .real-numbers, .solution-alternative {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+    padding: 60px 50px;
+    margin: 60px 0;
+    text-align: center;
+    border-top: 6px solid #f05d79;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
 }
 
-@keyframes pulse-warning {
-    0%, 100% { 
-        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15); 
-    }
-    50% { 
-        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3); 
-    }
+.infrastructure-costs:hover, .real-numbers:hover, .solution-alternative:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(240, 93, 121, 0.15);
+}
+
+.infrastructure-costs h3, .real-numbers h3, .solution-alternative h3 {
+    color: #333;
+    font-size: 2em;
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+.cost-breakdown, .cost-timeline, .failure-points, .lci-impact {
+    display: grid;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.cost-item, .cost-phase, .failure-point, .lci-explanation, .funding-math {
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: left;
+}
+
+.cost-item h4, .cost-phase h4, .failure-point h4 {
+    color: #333;
+    font-size: 1.3em;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+
+.tax-scenario {
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 20px 0;
+    border-left: 4px solid #f05d79;
+}
+
+.solution-alternative a {
+    color: #f05d79;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 2px solid #f05d79;
+    transition: all 0.3s;
+}
+
+.solution-alternative a:hover {
+    color: #2c5530;
+    border-bottom-color: #2c5530;
 }
 
 /* Responsive Design for New Sections */
