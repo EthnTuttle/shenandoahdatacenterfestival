@@ -1,91 +1,55 @@
 # Shenandoah Datacenter Festival
 
-A satirical website template with integrated Nostr discussions, highlighting the tension between agricultural heritage and datacenter development.
+The premier satirical festival celebrating Frederick County's digital agricultural future - a loving parody of the Shenandoah Apple Blossom Festival.
 
 ## About
 
-This template creates satirical festival websites as a creative way to draw attention to land use issues. The Shenandoah Datacenter Festival example addresses datacenter development impacts on rural communities in Frederick County, Virginia.
+The Shenandoah Datacenter Festival (April 24 - May 3, 2026) is a satirical response to datacenter development in Frederick County, Virginia. Through humor and community discussion, we highlight the tension between preserving agricultural heritage and embracing our digital server farm future.
 
-The site combines satirical festival marketing with serious information about development impacts and decentralized community discussions powered by Nostr.
+**"Where Silicon Meets Silo"** - Experience events like Little Miss Gigawatt, Solar Panel Glare Staring Contest, and VR Server Picking, while engaging in serious discussions about land use in our community.
 
-## Features
+## Festival Events 2026
 
-### Core Template Features
-- **Satirical Festival Marketing**: Complete with fictional events and professional design
-- **Serious Information Pages**: Real data about land use impacts
-- **Responsive Design**: Works on desktop and mobile devices
-- **Interactive Elements**: Smooth scrolling, animations, and Easter eggs
+- **🏆 Little Miss Gigawatt Pageant** - Crown made of recycled ethernet cables
+- **☀️ Solar Panel Glare Staring Contest** - Test your endurance against server farm brilliance  
+- **🌳 Streaming Parade of Apple Trees** - 4K virtual reality orchard experience
+- **🥽 Pick Your Own Server VR Experience** - Harvest fresh processors from digital racks
+- **🦌 Digital Stag Lunch** - Online dating for tech enthusiasts
 
-### Nostr Integration
-- **Decentralized Discussions**: Community conversations powered by Nostr protocol
-- **NIP-05 Identity Verification**: Whitelisted users verified through domain
-- **Admin Whitelist System**: DM-based access request system
-- **Facebook-style Interface**: Familiar social media UX with decentralized backend
-- **Real-time Feed**: Live updates from Nostr relays
-- **Comment Threading**: Full discussion capabilities
+## Community Discussions
 
-## Using This Template
+### Nostr-Powered Conversations
+- **Decentralized Discussions**: Community conversations on Nostr protocol
+- **NIP-05 Verified Users**: Domain-verified community members at `@shenandoahdatacenterfestival.com`
+- **Moderated Access**: Request whitelist access to join discussions
+- **Real-time Feed**: Live updates from Damus and Primal relays
 
-### Quick Start
-1. Click "Use this template" on GitHub
-2. Update `config.js` with your admin npub and site details
-3. Modify `.well-known/nostr.json` with your initial whitelist
-4. Customize the festival content for your cause
-5. Deploy to GitHub Pages
+## Join the Discussion
 
-### Configuration
+Visit [shenandoahdatacenterfestival.com/discussions.html](https://shenandoahdatacenterfestival.com/discussions.html) to:
 
-#### Admin Setup
-```javascript
-// config.js - Update with your details
-ADMIN_NPUB: 'your-admin-npub-here', // Receives whitelist requests
-SITE_INFO: {
-    domain: 'yoursite.com',
-    name: 'Your Festival Name',
-    description: 'Your cause description'
-}
-```
+1. **Connect Your Nostr Wallet** (nos2x, Alby, etc.)
+2. **Request Community Access** via DM to festival admin
+3. **Join Verified Discussions** about Frederick County's future
+4. **Share Your Agricultural Advocacy** in a decentralized forum
 
-#### NIP-05 Whitelist
-```json
-// .well-known/nostr.json - Add approved users
-{
-    "names": {
-        "username1": "user1-hex-pubkey",
-        "username2": "user2-hex-pubkey"
-    }
-}
-```
+### Getting Access
+- New users: Submit access request → Admin approves → Join discussions
+- Anonymous: View community conversations  
+- Verified members: Post, comment, and engage fully
 
-## File Structure
+## Technical Details
 
-- `index.html` - Main festival marketing page (satirical)
-- `discussions.html` - Nostr-powered community discussions
-- `facts.html` - Serious information page
-- `config.js` - Nostr and site configuration
-- `nostr-client.js` - Nostr protocol integration
-- `discussions.js` - Discussion interface logic
-- `styles.css` & `discussions.css` - Styling
-- `.well-known/nostr.json` - NIP-05 identity verification
+This satirical festival site runs on:
+- **Static hosting** via GitHub Pages
+- **Nostr protocol** for decentralized discussions  
+- **NIP-05 verification** for community trust
+- **Custom domain** with proper DNS configuration
 
-## Deployment
+## The Real Issue
 
-### GitHub Pages Setup
-1. Enable GitHub Pages in repository settings
-2. Choose "GitHub Actions" as source (automatic with included workflow)
-3. Set custom domain in Pages settings
-4. Configure DNS A records for your domain
-
-## Purpose
-
-This website aims to:
-1. Raise awareness about agricultural land preservation
-2. Encourage community engagement in local land use decisions  
-3. Provide factual information about datacenter development impacts
-4. Use humor and satire to make serious topics more accessible
-
-Festival dates mirror the 2026 Shenandoah Apple Blossom Festival (April 24 - May 3, 2026) for maximum satirical impact.
+Behind the satirical server farm marketing lies a serious conversation about preserving Frederick County's agricultural character. Visit our [Datacenter Facts](https://shenandoahdatacenterfestival.com/facts.html) page for data-driven insights into land use impacts.
 
 ## Disclaimer
 
-This is a work of satire intended to promote discussion about land use and agricultural preservation. It is not affiliated with any actual datacenter companies or agricultural organizations.
+🌾 This is a work of satirical advocacy intended to promote discussion about agricultural preservation in Frederick County, Virginia. Not affiliated with actual datacenters, festivals, or the Shenandoah Apple Blossom Festival.
