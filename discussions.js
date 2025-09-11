@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // User info elements
         userName: document.getElementById('user-name'),
         userNip05: document.getElementById('user-nip05'),
+        verificationStatus: document.getElementById('verification-status'),
         
         // Post creation
         postCreation: document.getElementById('post-creation'),
@@ -49,7 +50,21 @@ document.addEventListener('DOMContentLoaded', function() {
     async function init() {
         setupEventListeners();
         checkAuthState();
+        
+        console.log('Discussions page initialized - waiting for relays...');
+        
+        // Set up auto-refresh every 30 seconds
+        setInterval(async () => {
+            console.log('Auto-refreshing feed...');
+            await loadFeed();
+        }, 30000); // 30 seconds
+    }
+    
+    // Called when relays are ready
+    async function onRelaysReady() {
+        console.log('Relays are ready! Loading initial feed...');
         await loadFeed();
+        console.log('Initial feed loaded. Auto-refresh active every 30 seconds.');
     }
 
     function setupEventListeners() {
@@ -106,16 +121,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update user info
         const displayName = window.nostrClient.getUserDisplayName(currentUser.pubkey);
         const nip05 = window.nostrClient.getUserNip05(currentUser.pubkey);
+        const isVerified = window.nostrClient.isWhitelisted(currentUser.pubkey);
         
         elements.userName.textContent = displayName;
-        elements.userNip05.textContent = nip05 || '@shenandoahdatacenterfestival.com';
+        
+        if (nip05) {
+            elements.userNip05.textContent = nip05;
+            elements.userNip05.style.display = 'block';
+        } else {
+            elements.userNip05.style.display = 'none';
+        }
+        
+        // Update verification status
+        if (elements.verificationStatus) {
+            if (isVerified) {
+                elements.verificationStatus.innerHTML = '<span class="verified-icon">✅</span> NIP-05 Verified';
+                elements.verificationStatus.className = 'verification-badge verified';
+            } else {
+                elements.verificationStatus.innerHTML = '<span class="unverified-icon">❌</span> Not Verified';
+                elements.verificationStatus.className = 'verification-badge unverified';
+            }
+        }
         
         // Show/hide post creation based on whitelist status
         if (currentUser.canPost) {
             elements.postCreation.style.display = 'block';
         } else {
             elements.postCreation.style.display = 'none';
-            showNotification('You are not whitelisted for posting. Request access below.', 'warning');
+            showNotification('You are not in the NIP-05 verified users list. Request access below.', 'warning');
         }
     }
 
@@ -201,12 +234,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             await window.nostrClient.sendAccessRequest(name, reason, pubkeyHex);
             
-            showNotification('Access request sent successfully! You will be notified when approved.', 'success');
+            showNotification('NIP-05 verification request sent successfully! You will be notified when approved.', 'success');
             hideRequestForm();
             
         } catch (error) {
             console.error('Failed to send access request:', error);
-            showNotification(error.message || 'Failed to send access request', 'error');
+            showNotification(error.message || 'Failed to send verification request', 'error');
         } finally {
             hideLoading();
         }
@@ -329,14 +362,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const nip05 = window.nostrClient.getUserNip05(post.pubkey);
         const timestamp = window.nostrClient.formatTimestamp(post.created_at);
         const isOwnPost = currentUser && currentUser.pubkey === post.pubkey;
+        const isVerified = window.nostrClient.isWhitelisted(post.pubkey);
+        
+        // All posts in the main feed are top-level posts (no replies shown here)
+        console.log(`Creating top-level post element for:`, post.id.substring(0, 8), post.content.substring(0, 50));
         
         return `
-            <div class="post-card" data-post-id="${post.id}">
+            <div class="post-card top-level-post" data-post-id="${post.id}" data-post-type="top-level">
                 <div class="post-header-info">
                     <div class="user-avatar">👤</div>
                     <div>
-                        <div class="post-author-name">${displayName}</div>
-                        <div class="post-author-nip05">${nip05 || ''}</div>
+                        <div class="post-author-name">
+                            ${displayName}
+                            ${isVerified ? '<span class="verified-badge">✅</span>' : ''}
+                        </div>
+                        ${nip05 ? `<div class="post-author-nip05">${nip05}</div>` : ''}
                     </div>
                     <div class="post-timestamp">${timestamp}</div>
                 </div>
@@ -348,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         👍 <span class="like-count">0</span>
                     </button>
                     <button class="action-btn comment-btn" data-post-id="${post.id}">
-                        💬 <span class="comment-count">0</span>
+                        💬 <span class="comment-count">0</span> <span class="comment-text">Comments</span>
                     </button>
                     <button class="action-btn share-btn" data-post-id="${post.id}">
                         🔄 Share
@@ -360,8 +400,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="comments-list"></div>
                     ${currentUser && currentUser.canPost ? `
                         <div class="comment-form">
-                            <textarea placeholder="Write a comment..." rows="2"></textarea>
-                            <button class="btn btn-primary comment-submit">Comment</button>
+                            <textarea placeholder="Write a comment about this post..." rows="2"></textarea>
+                            <button class="btn btn-primary comment-submit">Post Comment</button>
                         </div>
                     ` : ''}
                 </div>
@@ -438,15 +478,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createCommentElement(comment) {
         const displayName = window.nostrClient.getUserDisplayName(comment.pubkey);
+        const nip05 = window.nostrClient.getUserNip05(comment.pubkey);
         const timestamp = window.nostrClient.formatTimestamp(comment.created_at);
+        const isVerified = window.nostrClient.isWhitelisted(comment.pubkey);
         
         return `
             <div class="comment">
                 <div class="user-avatar">👤</div>
                 <div class="comment-content">
-                    <div class="comment-author">${displayName}</div>
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            ${displayName}
+                            ${isVerified ? '<span class="verified-badge">✅</span>' : ''}
+                        </span>
+                        ${nip05 ? `<span class="comment-nip05">${nip05}</span>` : ''}
+                        <span class="comment-timestamp">${timestamp}</span>
+                    </div>
                     <div class="comment-text">${escapeHtml(comment.content)}</div>
-                    <div class="comment-timestamp">${timestamp}</div>
                 </div>
             </div>
         `;
@@ -590,6 +638,19 @@ document.addEventListener('DOMContentLoaded', function() {
         refreshFeed,
         loadFeed,
         currentUser: () => currentUser,
-        isLoading: () => isLoading
+        isLoading: () => isLoading,
+        onRelaysReady, // Add callback for when relays are ready
+        // Test function for the specific event we're looking for
+        async testSpecificEvent() {
+            const eventId = '8fbdef5105b89e4d5ac43b1081a17395243f2d2db543bfe7b82efc4027eaf493';
+            const author = 'd3d74124ddfb5bdc61b8f18d17c3335bbb4f8c71182a35ee27314a49a4eb7b1d';
+            
+            console.log('=== TESTING SPECIFIC MISSING EVENT ===');
+            console.log('Event ID:', eventId);
+            console.log('Author:', author);
+            console.log('Is author whitelisted?', window.nostrClient.isWhitelisted(author));
+            
+            return await window.nostrClient.testEventQuery(eventId, author);
+        }
     };
 });

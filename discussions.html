@@ -60,10 +60,10 @@
                 <div id="auth-section" class="auth-section">
                     <div id="not-authenticated" class="auth-card">
                         <h3>🌾 Join the Digital Harvest Discussion</h3>
-                        <p>Connect your Nostr identity to participate in community discussions about Frederick County's future.</p>
+                        <p>This forum is limited to <strong>NIP-05 verified users</strong> listed in our <a href="/.well-known/nostr.json" target="_blank">nostr.json file</a>. Connect your Nostr identity to participate in community discussions about Frederick County's future.</p>
                         <div class="auth-options">
-                            <button id="connect-nostr" class="btn btn-primary">Connect Nostr Wallet</button>
-                            <button id="request-access" class="btn btn-secondary">Request Access</button>
+                            <button id="connect-nostr" class="btn btn-primary">Connect Nostr Extension</button>
+                            <button id="request-access" class="btn btn-secondary">Request Verification</button>
                         </div>
                         <p class="auth-note">New to Nostr? <a href="#nostr-help" class="help-link">Learn more about Nostr</a></p>
                     </div>
@@ -74,13 +74,16 @@
                             <div class="user-details">
                                 <h4 id="user-name">Connected</h4>
                                 <p id="user-nip05">@shenandoahdatacenterfestival.com</p>
+                                <div id="verification-status" class="verification-badge">
+                                    <span class="verified-icon">✅</span> NIP-05 Verified
+                                </div>
                             </div>
                             <button id="disconnect" class="btn btn-outline">Disconnect</button>
                         </div>
                     </div>
 
                     <div id="request-access-form" class="auth-card" style="display: none;">
-                        <h3>Request Whitelist Access</h3>
+                        <h3>Request NIP-05 Verification</h3>
                         <form id="access-request-form">
                             <div class="form-group">
                                 <label for="request-npub">Your Nostr Public Key (npub)</label>
@@ -91,11 +94,11 @@
                                 <input type="text" id="request-name" placeholder="Your name" required>
                             </div>
                             <div class="form-group">
-                                <label for="request-reason">Why do you want to join?</label>
-                                <textarea id="request-reason" placeholder="Tell us about your interest in Frederick County's agricultural future..." required></textarea>
+                                <label for="request-reason">Why do you want NIP-05 verification?</label>
+                                <textarea id="request-reason" placeholder="Tell us about your interest in Frederick County's agricultural future and why you should be added to our verified users list..." required></textarea>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Send Access Request</button>
+                                <button type="submit" class="btn btn-primary">Request Verification</button>
                                 <button type="button" id="cancel-request" class="btn btn-secondary">Cancel</button>
                             </div>
                         </form>

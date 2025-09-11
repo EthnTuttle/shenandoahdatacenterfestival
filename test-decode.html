@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decode Nostr Event</title>
+    <script src="https://unpkg.com/nostr-tools@latest/lib/nostr.bundle.js"></script>
+</head>
+<body>
+    <h1>Event Decoder</h1>
+    <div id="result"></div>
+    
+    <script>
+        const nevent = 'nevent1qvzqqqqqqypzp57hgyjdm76mm3sm3uvdzlpnxkamf7x8zxp2xhhzwv22fxjwk7caqqsgl0002yzm38jdttzrkyyp59ee2fpl95km2salu7uzalzqyl40fycj9p3xl';
+        
+        try {
+            const decoded = NostrTools.nip19.decode(nevent);
+            console.log('Decoded event:', decoded);
+            
+            document.getElementById('result').innerHTML = `
+                <h2>Decoded Event:</h2>
+                <p><strong>Type:</strong> ${decoded.type}</p>
+                <p><strong>Event ID:</strong> ${decoded.data.id}</p>
+                <p><strong>Author:</strong> ${decoded.data.author || 'Not specified'}</p>
+                <p><strong>Relays:</strong> ${JSON.stringify(decoded.data.relays || [])}</p>
+                <pre>${JSON.stringify(decoded, null, 2)}</pre>
+            `;
+            
+            // Now let's try to fetch this specific event
+            fetchSpecificEvent(decoded.data.id, decoded.data.author, decoded.data.relays);
+            
+        } catch (error) {
+            console.error('Decoding error:', error);
+            document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+        
+        async function fetchSpecificEvent(eventId, author, relays) {
+            console.log('Trying to fetch event:', eventId);
+            
+            const testRelays = relays && relays.length > 0 ? relays : [
+                'wss://relay.damus.io',
+                'wss://relay.primal.net'
+            ];
+            
+            console.log('Using relays:', testRelays);
+            
+            try {
+                const pool = new NostrTools.SimplePool();
+                
+                const filter = {
+                    kinds: [1],
+                    ids: [eventId]
+                };
+                
+                console.log('Filter:', filter);
+                
+                // Try different API methods
+                let events = [];
+                try {
+                    events = await pool.list(testRelays, [filter]);
+                    console.log('Found events with list():', events);
+                } catch (e1) {
+                    console.log('list() failed, trying querySync():', e1.message);
+                    try {
+                        events = await pool.querySync(testRelays, filter);
+                        console.log('Found events with querySync():', events);
+                    } catch (e2) {
+                        console.log('querySync() failed, trying get():', e2.message);
+                        try {
+                            const event = await pool.get(testRelays, filter);
+                            events = event ? [event] : [];
+                            console.log('Found events with get():', events);
+                        } catch (e3) {
+                            console.error('All methods failed:', e3.message);
+                        }
+                    }
+                }
+                
+                if (events.length > 0) {
+                    const event = events[0];
+                    document.getElementById('result').innerHTML += `
+                        <h2>Found Event:</h2>
+                        <p><strong>ID:</strong> ${event.id}</p>
+                        <p><strong>Author:</strong> ${event.pubkey}</p>
+                        <p><strong>Created:</strong> ${new Date(event.created_at * 1000).toLocaleString()}</p>
+                        <p><strong>Content:</strong> ${event.content}</p>
+                        <p><strong>Tags:</strong> ${JSON.stringify(event.tags)}</p>
+                        <pre>${JSON.stringify(event, null, 2)}</pre>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML += `<p><strong>Event not found on relays!</strong></p>`;
+                }
+                
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('result').innerHTML += `<p>Fetch error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

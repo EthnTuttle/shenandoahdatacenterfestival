@@ -8,6 +8,7 @@ class NostrClient {
         this.privateKey = null;
         this.whitelistedUsers = new Set();
         this.isConnected = false;
+        this.relaysReady = false;
         
         this.initializeRelayPool();
         this.loadWhitelistedUsers();
@@ -19,15 +20,35 @@ class NostrClient {
             this.relayPool = new NostrTools.SimplePool();
             
             // Connect to relays
-            for (const relay of this.relays) {
+            const connectionPromises = this.relays.map(async (relay) => {
                 try {
                     await this.relayPool.ensureRelay(relay);
                     this.connectedRelays.add(relay);
                     console.log(`Connected to relay: ${relay}`);
+                    return true;
                 } catch (error) {
                     console.error(`Failed to connect to relay ${relay}:`, error);
+                    return false;
                 }
-            }
+            });
+            
+            // Wait for all connection attempts
+            await Promise.all(connectionPromises);
+            
+            // Mark relays as ready
+            this.relaysReady = true;
+            console.log(`Relays ready! Connected to ${this.connectedRelays.size} relays`);
+            
+            // Notify that relays are ready
+            setTimeout(() => {
+                if (window.discussionsApp && window.discussionsApp.onRelaysReady) {
+                    console.log('Calling onRelaysReady callback...');
+                    window.discussionsApp.onRelaysReady();
+                } else {
+                    console.log('discussionsApp not ready yet, will load on auto-refresh');
+                }
+            }, 100); // Small delay to ensure discussionsApp is initialized
+            
         } catch (error) {
             console.error('Failed to initialize relay pool:', error);
         }
@@ -39,6 +60,9 @@ class NostrClient {
             const response = await fetch('/.well-known/nostr.json');
             const nip05Data = await response.json();
             
+            // Store the NIP-05 data for later use
+            this.nip05Data = nip05Data;
+            
             // Add all users from the NIP-05 file to whitelist
             if (nip05Data.names) {
                 Object.values(nip05Data.names).forEach(pubkey => {
@@ -46,9 +70,13 @@ class NostrClient {
                 });
             }
             
-            console.log(`Loaded ${this.whitelistedUsers.size} whitelisted users`);
+            console.log(`Loaded ${this.whitelistedUsers.size} whitelisted users from NIP-05:`, Array.from(this.whitelistedUsers));
+            console.log('NIP-05 names mapping:', nip05Data.names);
         } catch (error) {
             console.error('Failed to load whitelisted users:', error);
+            // Fallback: ensure we have basic functionality even if nostr.json fails
+            this.whitelistedUsers.clear();
+            this.nip05Data = { names: {}, relays: {} };
         }
     }
 
@@ -105,16 +133,16 @@ class NostrClient {
             }
 
             const requestContent = `
-🌾 WHITELIST REQUEST - Shenandoah Datacenter Festival
+🌾 NIP-05 VERIFICATION REQUEST - Shenandoah Datacenter Festival
 
 Name: ${name}
 Public Key: ${userPubkey}
 Domain: ${NOSTR_CONFIG.SITE_INFO.domain}
 
-Reason for joining:
+Reason for verification:
 ${reason}
 
-Please add this user to the NIP-05 whitelist at ${NOSTR_CONFIG.SITE_INFO.domain}/.well-known/nostr.json
+Please add this user to the NIP-05 verification list at ${NOSTR_CONFIG.SITE_INFO.domain}/.well-known/nostr.json
 
 This is an automated request from the festival website.
             `.trim();
@@ -170,26 +198,108 @@ This is an automated request from the festival website.
     async loadRecentPosts(limit = 20) {
         try {
             if (!this.relayPool || this.connectedRelays.size === 0) {
+                console.warn('No relay pool or connected relays available');
                 return [];
+            }
+            
+            if (!this.relaysReady) {
+                console.log('Relays not ready yet, waiting...');
+                // Wait up to 10 seconds for relays to be ready
+                for (let i = 0; i < 100; i++) {
+                    if (this.relaysReady) break;
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                if (!this.relaysReady) {
+                    console.error('Timeout waiting for relays to be ready');
+                    return [];
+                }
             }
 
             // Create filter for posts from whitelisted users
             const whitelistedArray = Array.from(this.whitelistedUsers);
+            console.log('Loading posts from whitelisted users:', whitelistedArray);
+            
+            if (whitelistedArray.length === 0) {
+                console.warn('No whitelisted users found - loading all recent posts with required tags');
+                const requiredTags = ['frederick-county', 'agriculture', 'shenandoah-datacenter-festival'];
+                
+                const fallbackFilter = {
+                    kinds: [1], // Text notes only
+                    '#t': requiredTags,
+                    limit: limit,
+                    since: Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60) // Last 30 days
+                };
+                
+                try {
+                    const events = await this.relayPool.querySync(Array.from(this.connectedRelays), fallbackFilter);
+                    console.log('Loaded events (no whitelist):', events.length);
+                    events.sort((a, b) => b.created_at - a.created_at);
+                    return events;
+                } catch (error) {
+                    console.error('Fallback query failed:', error.message);
+                    return [];
+                }
+            }
+            
+            // Only get events that have the EXACT same tags we use when posting
+            // This ensures consistency and relevance to our festival discussions
+            const requiredTags = ['frederick-county', 'agriculture', 'shenandoah-datacenter-festival'];
             
             const filter = {
-                kinds: [1], // Text notes only
+                kinds: [1],
                 authors: whitelistedArray,
-                '#t': ['frederick-county', 'agriculture', 'shenandoah-datacenter-festival'],
-                limit: limit
+                '#t': requiredTags, // Must have at least one of our tags
+                limit: limit,
+                since: Math.floor(Date.now() / 1000) - (90 * 24 * 60 * 60) // Last 90 days
             };
+            
+            const filters = [filter];
+            
+            console.log('Querying relays with filters:', filters);
 
-            // Query relays
-            const events = await this.relayPool.list(Array.from(this.connectedRelays), [filter]);
+            // Query relays - use the correct API method
+            let events = [];
+            const relayUrls = Array.from(this.connectedRelays);
+            
+            console.log('Querying relays:', relayUrls, 'with filter:', filter);
+            
+            try {
+                // Use querySync which is the correct method for SimplePool
+                events = await this.relayPool.querySync(relayUrls, filter);
+                console.log('Successfully queried relays, got', events.length, 'events');
+            } catch (error) {
+                console.error('Failed to query relays:', error.message);
+                // Try the get method for single events
+                try {
+                    const singleEvent = await this.relayPool.get(relayUrls, filter);
+                    if (singleEvent) {
+                        events = [singleEvent];
+                        console.log('Got single event via get() method');
+                    }
+                } catch (altError) {
+                    console.error('All query methods failed:', altError.message);
+                    return [];
+                }
+            }
+            
+            // Remove duplicates based on event id
+            const uniqueEvents = events.filter((event, index, self) => 
+                index === self.findIndex(e => e.id === event.id)
+            );
+            console.log('Loaded unique events from whitelisted users:', uniqueEvents.length);
+            
+            // Separate top-level posts from replies
+            const topLevelPosts = uniqueEvents.filter(event => {
+                // Top-level posts don't have 'e' tags (not replies to other posts)
+                return !event.tags.some(tag => tag[0] === 'e');
+            });
+            
+            console.log('Filtered to top-level posts only:', topLevelPosts.length, 'of', uniqueEvents.length, 'total events');
             
             // Sort by creation time (newest first)
-            events.sort((a, b) => b.created_at - a.created_at);
+            topLevelPosts.sort((a, b) => b.created_at - a.created_at);
             
-            return events;
+            return topLevelPosts;
         } catch (error) {
             console.error('Failed to load posts:', error);
             return [];
@@ -198,20 +308,50 @@ This is an automated request from the festival website.
 
     async loadCommentsForPost(postId, limit = 50) {
         try {
+            if (!this.relaysReady) {
+                console.log('Relays not ready for comment loading, waiting...');
+                for (let i = 0; i < 50; i++) {
+                    if (this.relaysReady) break;
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                if (!this.relaysReady) {
+                    console.error('Timeout waiting for relays for comment loading');
+                    return [];
+                }
+            }
+
             const filter = {
                 kinds: [1], // Text notes
                 '#e': [postId], // Replies to the post
-                limit: limit
+                limit: limit,
+                since: Math.floor(Date.now() / 1000) - (90 * 24 * 60 * 60) // Last 90 days
             };
 
-            const events = await this.relayPool.list(Array.from(this.connectedRelays), [filter]);
+            console.log('Loading comments for post:', postId, 'with filter:', filter);
+
+            let events = [];
+            try {
+                events = await this.relayPool.querySync(Array.from(this.connectedRelays), filter);
+                console.log('Successfully loaded', events.length, 'raw comments for post', postId.substring(0, 8));
+            } catch (error) {
+                console.error('Comment query failed:', error.message);
+                return [];
+            }
             
-            // Filter to only whitelisted users
-            const whitelistedComments = events.filter(event => 
-                this.isWhitelisted(event.pubkey)
-            );
+            // Filter to only whitelisted users and events that are actually replies to this post
+            const whitelistedComments = events.filter(event => {
+                const isWhitelisted = this.isWhitelisted(event.pubkey);
+                const isReplyToPost = event.tags.some(tag => 
+                    tag[0] === 'e' && tag[1] === postId
+                );
+                
+                console.log(`Comment ${event.id.substring(0, 8)}: whitelisted=${isWhitelisted}, isReply=${isReplyToPost}`);
+                return isWhitelisted && isReplyToPost;
+            });
             
-            // Sort by creation time
+            console.log('Filtered to', whitelistedComments.length, 'valid comments');
+            
+            // Sort by creation time (oldest first for comments)
             whitelistedComments.sort((a, b) => a.created_at - b.created_at);
             
             return whitelistedComments;
@@ -238,7 +378,8 @@ This is an automated request from the festival website.
                 tags: [
                     ['e', postId], // Reply to post
                     ['t', 'frederick-county'],
-                    ['t', 'agriculture']
+                    ['t', 'agriculture'],
+                    ['t', 'shenandoah-datacenter-festival']
                 ],
                 content: content,
             };
@@ -289,20 +430,89 @@ This is an automated request from the festival website.
     }
 
     getUserDisplayName(pubkey) {
-        // This would typically fetch from user profile events
-        // For now, return a truncated pubkey
+        // Check if we have a name mapping in our NIP-05 data
+        if (this.nip05Data && this.nip05Data.names) {
+            for (const [name, mappedPubkey] of Object.entries(this.nip05Data.names)) {
+                if (mappedPubkey === pubkey) {
+                    return name;
+                }
+            }
+        }
+        
+        // Fallback to truncated pubkey
         return pubkey ? `${pubkey.substring(0, 8)}...` : 'Anonymous';
     }
 
     getUserNip05(pubkey) {
         // Check our local NIP-05 mapping
-        try {
-            // This would be loaded from the nostr.json
-            // For now, return generic format
-            return `${pubkey.substring(0, 8)}@${NOSTR_CONFIG.SITE_INFO.domain}`;
-        } catch {
-            return null;
+        if (this.nip05Data && this.nip05Data.names) {
+            for (const [name, mappedPubkey] of Object.entries(this.nip05Data.names)) {
+                if (mappedPubkey === pubkey) {
+                    return `${name}@${NOSTR_CONFIG.SITE_INFO.domain}`;
+                }
+            }
         }
+        
+        // Return null if not found in our NIP-05 mapping
+        return null;
+    }
+
+    // Debug function for testing specific events
+    async testEventQuery(eventId = null, author = null) {
+        console.log('=== DEBUG EVENT QUERY ===');
+        console.log('Event ID:', eventId);
+        console.log('Author:', author);
+        console.log('Connected relays:', Array.from(this.connectedRelays));
+        console.log('Whitelisted users:', Array.from(this.whitelistedUsers));
+        
+        const testFilters = [];
+        
+        if (eventId) {
+            testFilters.push({ kinds: [1], ids: [eventId] });
+        }
+        
+        if (author) {
+            testFilters.push({ 
+                kinds: [1], 
+                authors: [author], 
+                limit: 50 
+            });
+        }
+        
+        // General test filter
+        testFilters.push({ 
+            kinds: [1], 
+            limit: 20,
+            since: Math.floor(Date.now() / 1000) - (180 * 24 * 60 * 60) // 6 months
+        });
+        
+        for (let i = 0; i < testFilters.length; i++) {
+            const filter = testFilters[i];
+            console.log(`Testing filter ${i + 1}:`, filter);
+            
+            try {
+                let events = [];
+                try {
+                    events = await this.relayPool.querySync(
+                        Array.from(this.connectedRelays), 
+                        filter
+                    );
+                } catch (error) {
+                    console.error(`Debug query failed:`, error.message);
+                    events = [];
+                }
+                console.log(`Filter ${i + 1} results:`, events.length, 'events');
+                events.forEach(event => {
+                    console.log(`- Event ${event.id.substring(0, 8)}... by ${event.pubkey.substring(0, 8)}... at ${new Date(event.created_at * 1000).toLocaleString()}`);
+                    console.log(`  Tags:`, event.tags);
+                    console.log(`  Content:`, event.content.substring(0, 100) + '...');
+                });
+            } catch (error) {
+                console.error(`Filter ${i + 1} error:`, error);
+            }
+        }
+        
+        return true;
     }
 }
 
