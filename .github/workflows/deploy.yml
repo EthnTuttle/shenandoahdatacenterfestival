@@ -21,13 +21,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: mkstack/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: mkstack
+
+      - name: Build SPA
+        run: npm run build
+        working-directory: mkstack
+
+      - name: Copy CNAME to dist
+        run: cp CNAME mkstack/dist/CNAME
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'mkstack/dist'
 
   deploy:
     environment:

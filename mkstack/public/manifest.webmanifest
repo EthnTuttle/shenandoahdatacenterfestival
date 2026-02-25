@@ -1,0 +1,17 @@
+{
+  "name": "Shenandoah Datacenter Festival 2026",
+  "short_name": "SDCF 2026",
+  "description": "A satirical celebration of digital infrastructure and datacenter culture",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f05d79",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

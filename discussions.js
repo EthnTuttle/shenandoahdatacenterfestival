@@ -350,6 +350,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         elements.noPosts.style.display = 'none';
         
+        console.log('Rendering posts with current user state:', {
+            currentUser: currentUser,
+            isConnected: currentUser?.pubkey,
+            canPost: currentUser?.canPost,
+            isWhitelisted: currentUser ? window.nostrClient.isWhitelisted(currentUser.pubkey) : false
+        });
+        
         const postsHtml = posts.map(post => createPostElement(post)).join('');
         elements.postsContainer.innerHTML = postsHtml;
         
@@ -403,7 +410,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <textarea placeholder="Write a comment about this post..." rows="2"></textarea>
                             <button class="btn btn-primary comment-submit">Post Comment</button>
                         </div>
-                    ` : ''}
+                    ` : `
+                        <div class="comment-form-disabled">
+                            ${!currentUser ? 
+                                '<p class="auth-message">🔐 <a href="#" class="connect-link">Connect your Nostr extension</a> to comment</p>' : 
+                                '<p class="auth-message">⚠️ You need NIP-05 verification to comment. <a href="#" class="request-verification-link">Request verification</a></p>'
+                            }
+                        </div>
+                    `}
                 </div>
             </div>
         `;
@@ -428,6 +442,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Comment submission listeners
         document.querySelectorAll('.comment-submit').forEach(btn => {
             btn.addEventListener('click', submitComment);
+        });
+        
+        // Auth links in comment sections
+        document.querySelectorAll('.connect-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                connectNostr();
+            });
+        });
+        
+        document.querySelectorAll('.request-verification-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showRequestForm();
+            });
         });
     }
 
